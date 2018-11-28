@@ -2,86 +2,33 @@ from graph import Vertex as Vertex
 from graph import Graph as Graph
 import heapq
 
-#Define o caminho mais rápido
 def shortest(v, path):
     if v.previous:
-        path.append(v.previous.get_id())
+        path.append(v.previous.getId())
         shortest(v.previous, path)
     return
 
-def dijkstra(aGraph, start):
-    print '''Dijkstra's shortest path'''
-    # Set the distance for the start node to zero 
-    start.set_distance(0)
+def dijkstra(aGraph, start): 
+    start.setDistance(0)
 
-    # Put tuple pair into the priority queue
-    unvisited_queue = [(v.get_distance(),v) for v in aGraph]
-    heapq.heapify(unvisited_queue)
+    unvisitedQueue = [(vertex.getDistance(),vertex) for vertex in aGraph]
+    heapq.heapify(unvisitedQueue)
 
-    while len(unvisited_queue):
-        # Pops a vertex with the smallest distance 
-        uv = heapq.heappop(unvisited_queue)
-        current = uv[1]
-        current.set_visited()
+    while len(unvisitedQueue):
+        aVertex = heapq.heappop(unvisitedQueue)
+        current = aVertex[1]
+        current.setVisited()
 
-        #for next in v.adjacent:
         for next in current.adjacent:
-            # if visited, skip
             if next.visited:
                 continue
-            new_dist = current.get_distance() + current.get_weight(next)
+            newDistance = current.getDistance() + current.getWeight(next)
             
-            if new_dist < next.get_distance():
-                next.set_distance(new_dist)
-                next.set_previous(current)
-                print 'updated : current = %s next = %s new_dist = %s' \
-                        %(current.get_id(), next.get_id(), next.get_distance())
-            else:
-                print 'not updated : current = %s next = %s new_dist = %s' \
-                        %(current.get_id(), next.get_id(), next.get_distance())
+            if newDistance < next.getDistance():
+                next.setDistance(newDistance)
+                next.setPrevious(current)
 
-        # Rebuild heap
-        # 1. Pop every item
-        while len(unvisited_queue):
-            heapq.heappop(unvisited_queue)
-        # 2. Put all vertices not visited into the queue
-        unvisited_queue = [(v.get_distance(),v) for v in aGraph if not v.visited]
-        heapq.heapify(unvisited_queue)
-
-
-if __name__ == '__main__':
-
-    g = Graph()
-
-    g.add_vertex('a')
-    g.add_vertex('b')
-    g.add_vertex('c')
-    g.add_vertex('d')
-    g.add_vertex('e')
-    g.add_vertex('f')
-
-    g.add_edge('a', 'b', 7)  
-    g.add_edge('a', 'c', 9)
-    g.add_edge('a', 'f', 14)
-    g.add_edge('b', 'c', 10)
-    g.add_edge('b', 'd', 15)
-    g.add_edge('c', 'd', 11)
-    g.add_edge('c', 'f', 2)
-    g.add_edge('d', 'e', 6)
-    g.add_edge('e', 'f', 9)
-
-    print 'Graph data:'
-    for v in g:
-        for w in v.get_connections():
-            vid = v.get_id()
-            wid = w.get_id()
-            print '( %s , %s, %3d)'  % ( vid, wid, v.get_weight(w))
-
-            
-    dijkstra(g, g.get_vertex('a')) 
-
-    for t in ['d','e','f']:
-        target = g.get_vertex(t)
-        path = [t]
-        shortest(target, path)
-        print 'The shortest path for %s : %s' %(t, path[::-1])
+        while len(unvisitedQueue):
+            heapq.heappop(unvisitedQueue)
+        unvisitedQueue = [(vertex.getDistance(),vertex) for vertex in aGraph if not vertex.visited]
+        heapq.heapify(unvisitedQueue)

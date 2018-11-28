@@ -1,10 +1,12 @@
+import sys
+
 class Vertex:
   def __init__(self, node):
     self.id = node
     self.adjacent = {}
     self.distance = sys.maxint
-    self.visited = false
-    self.previous = none
+    self.visited = False
+    self.previous = None
 
   def addNeighbor(self, neighbor, weight = 0):
     self.adjacent[neighbor] = weight
@@ -28,7 +30,7 @@ class Vertex:
     self.previous = previous
 
   def setVisited(self):
-    self.visited = true
+    self.visited = True
 
   def __str__(self):
     return str(self.id) + ' adjacente(s): ' + str([x.id for x in self.adjacent])
